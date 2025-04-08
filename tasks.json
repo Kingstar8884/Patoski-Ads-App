@@ -1,0 +1,35 @@
+{
+    "tasks": [
+                
+        {
+            "id": "12345",
+            "_for": "@codingdemos",
+            "icon": "fab fa-telegram",
+            "description": "Join Telegram Channel",
+            "reward": 1,
+            "url": "https://t.me/codingdemos"
+        },
+        {
+            "id": "12347",
+            "icon": "fab fa-twitter",
+            "description": "Follow on Twitter",
+            "reward": 1.5,
+            "url": "https://twitter.com/example"
+        },
+        {
+            "id": "12348",
+            "icon": "fab fa-discord",
+            "description": "Join Discord Server",
+            "reward": 2.5,
+            "url": "https://discord.com/invite/example"
+        },
+        {
+            "id": "12349",
+            "icon": "fab fa-youtube",
+            "description": "Subscribe on YouTube",
+            "reward": 3,
+            "url": "https://youtube.com/@example"
+        }
+        
+    ]
+}

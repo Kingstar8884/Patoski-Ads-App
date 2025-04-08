@@ -1,0 +1,974 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+}
+
+#adBtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #adBtn:hover {
+    background-color: #45a049;
+  }
+
+  #adBtn:active {
+    background-color: #3d8b40;
+    transform: translateY(2px);
+  }
+
+  /* Icon styling */
+  #adBtn i {
+    font-size: 14px;
+  }
+
+
+
+/* Overlay background */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    display: none;
+}
+
+/* Pop-up box */
+.popup-box {
+    background: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Title */
+.popup-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Benefits list */
+.popup-content {
+    text-align: left;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.popup-content p {
+    margin: 8px 0;
+}
+
+/* Buttons */
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-btn {
+    padding: 10px 15px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 48%;
+}
+
+.continue-btn {
+    background: #28a745;
+    color: white;
+}
+
+.cancel-btn {
+    background: #dc3545;
+    color: white;
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* App Container */
+.app-container {
+    max-width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: #fff;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(90deg, #1e90ff, #00b7eb);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 2px solid #fff;
+    transition: transform 0.3s ease;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.username {
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.support-icon {
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.support-icon span {
+    font-size: 12px;
+}
+
+.support-icon:hover {
+    transform: rotate(360deg);
+}
+
+/* Pages */
+.pages {
+    position: absolute;
+    top: 60px;
+    bottom: 60px;
+    width: 100%;
+    overflow: scroll;
+}
+
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: none;
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Page Transition Animation (Slide-In Only) */
+.page.slide-in {
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Home Page */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.fixed-top-section {
+    flex-shrink: 0;
+}
+
+.balance-section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.balance-card {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.balance-card:hover {
+    transform: translateY(-3px);
+}
+
+.balance-card i {
+    font-size: 24px;
+    color: #1e90ff;
+    margin-right: 15px;
+}
+
+.balance-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.balance-card h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.create-ads-btn,
+.bonus-btn,
+.advertiser-btn {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.create-ads-btn {
+    background: #1e90ff;
+}
+
+.advertiser-btn {
+    background: rgb(3, 153, 3);
+}
+
+.create-ads-btn:hover,
+.advertiser-btn:hover,
+.bonus-btn:hover {
+    filter: brightness(1.1);
+}
+
+.create-ads-btn:active,
+.bonus-btn:active,
+.advertiser-btn:active {
+    transform: scale(0.98);
+}
+
+.create-ads-btn i,
+.bonus-btn i,
+.advertiser-btn i {
+    margin-right: 10px;
+}
+
+.bonus-btn {
+    background: #00b7eb;
+}
+
+/* Combined Tasks and Upgrades Section */
+.tasks-upgrades-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.toggle-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    background: #f0f0f0;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.toggle-btn.active {
+    background: #1e90ff;
+    color: #fff;
+}
+
+.toggle-btn:hover {
+    background: #e0e0e0;
+}
+
+.toggle-btn.active:hover {
+    background: #007bff;
+}
+
+/* Tasks Section */
+
+
+
+#no-task {
+    border: 2px solid rgb(177, 175, 175);
+    text-align: center;
+    padding-block: 20px;
+    margin-block: 10px;
+    border-radius: 7px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.tasks-section {
+    flex-grow: 1;
+    display: none;
+    flex-direction: column;
+}
+
+.tasks-section.active {
+    display: flex;
+}
+
+.task-list-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+}
+
+.task-list {
+    list-style: none;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInTask 0.5s ease forwards;
+}
+
+@keyframes slideInTask {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.task-item i {
+    font-size: 20px;
+    color: #666;
+    margin-right: 15px;
+}
+
+.task-details {
+    flex-grow: 1;
+}
+
+.task-details p {
+    font-size: 16px;
+    color: #333;
+}
+
+.task-details span {
+    font-size: 14px;
+    color: #666;
+}
+
+.start-btn {
+    padding: 8px 20px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.start-btn:hover {
+    background: #007bff;
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+}
+
+/* Upgraded Members Section */
+.upgraded-members-section {
+    flex-grow: 1;
+    display: none;
+    flex-direction: column;
+}
+
+.upgraded-members-section.active {
+    display: flex;
+}
+
+.upgraded-list-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+}
+
+.upgraded-list {
+    list-style: none;
+}
+
+.upgraded-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInTask 0.5s ease forwards;
+    color: #fff;
+}
+
+.upgraded-details {
+    display: flex;
+    align-items: center;
+}
+
+.upgraded-details i {
+    font-size: 24px;
+    color: #1e90ff;
+    margin-right: 15px;
+}
+
+.upgraded-details p {
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.upgraded-details span {
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.upgraded-amount {
+    font-size: 16px;
+    font-weight: bold;
+    color: #00ffcc;
+}
+
+/* Visitor Stats Section */
+.visitor-stats-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.visitor-stats-section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#visitor-stats {
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Deposit Page */
+.deposit-section {
+    text-align: center;
+}
+
+.qr-code {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+.address {
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    word-break: break-all;
+    font-size: 14px;
+    color: #333;
+}
+
+.copy-btn {
+    padding: 10px 20px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.copy-btn:hover {
+    background: #007bff;
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+.deposit-info {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* Deposit History Section */
+.deposit-history-section {
+    margin-top: 20px;
+}
+
+.deposit-history-section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.history-list {
+    list-style: none;
+}
+
+.history-item {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.history-details p {
+    font-size: 14px;
+    color: #333;
+    margin: 5px 0;
+}
+
+/* Refer Page */
+.refer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.refer-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card i {
+    font-size: 24px;
+    color: #1e90ff;
+    margin-right: 15px;
+}
+
+.stat-card p {
+    font-size: 14px;
+    color: #666;
+}
+
+.stat-card h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+.stat-card h3.clickable {
+    cursor: pointer;
+    color: #1e90ff;
+    transition: color 0.3s ease;
+}
+
+.stat-card h3.clickable:hover {
+    color: #007bff;
+}
+
+.reveal-text {
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+    display: block;
+}
+
+.referrals-list {
+    margin-top: 10px;
+}
+
+.referrals-list h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.refer-link-section {
+    text-align: center;
+}
+
+.refer-link {
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    word-break: break-all;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.copy-refer-btn {
+    padding: 10px 20px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.copy-refer-btn:hover {
+    background: #007bff;
+}
+
+.copy-refer-btn:active {
+    transform: scale(0.95);
+}
+
+.copy-refer-btn.copied {
+    background: #28a745;
+}
+
+.friends-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInTask 0.5s ease forwards;
+}
+
+.friend-item i {
+    font-size: 20px;
+    color: #666;
+    margin-right: 15px;
+}
+
+.friend-details {
+    flex-grow: 1;
+}
+
+.friend-details p {
+    font-size: 16px;
+    color: #333;
+}
+
+.friend-details span {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Withdraw Page */
+.withdraw-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: #1e90ff;
+    outline: none;
+}
+
+.withdraw-btn {
+    padding: 15px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.withdraw-btn:hover {
+    background: #007bff;
+}
+
+.withdraw-btn:active {
+    transform: scale(0.98);
+}
+
+.withdraw-btn i {
+    margin-right: 10px;
+}
+
+/* Withdrawal History Section */
+.withdrawal-history-section {
+    margin-top: 20px;
+}
+
+.withdrawal-history-section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Recent Withdrawals Section */
+.withdrawals-section {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.withdrawals-section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.withdrawals-list-wrapper {
+    flex-grow: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+}
+
+.withdrawals-list {
+    list-style: none;
+}
+
+.withdrawal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInTask 0.5s ease forwards;
+    color: #fff;
+}
+
+.withdrawal-details {
+    display: flex;
+    align-items: center;
+}
+
+.withdrawal-details i {
+    font-size: 24px;
+    color: #1e90ff;
+    margin-right: 15px;
+}
+
+.withdrawal-details p {
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.withdrawal-details span {
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.withdrawal-amount {
+    font-size: 16px;
+    font-weight: bold;
+    color: #00ffcc;
+}
+
+/* Others Page */
+.info-section p {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.info-section a {
+    color: #1e90ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.info-section a:hover {
+    color: #007bff;
+}
+
+/* Navigation Bar */
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.1s ease;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.nav-item:hover {
+    color: #1e90ff;
+    transform: translateY(-2px);
+}
+
+.nav-item.active {
+    color: #1e90ff;
+}

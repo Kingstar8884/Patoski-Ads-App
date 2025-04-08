@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADSTradeX WebApp</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+
+  <!-- Ads tag here -->
+
+  <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+
+</head>
+
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen">
+    <img src="/img/logo.JPG" alt="ADSTradeX Logo" class="loading-logo" />
+  </div>
+
+  <!-- Pop-up Notification -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-box">
+      <div class="popup-title">Exclusive Benefits 🎉</div>
+      <div class="popup-content">
+        <p>🟢 <b>$1 per Referral</b></p>
+        <p>🟢 <b>Access to perform tasks & earn over $10 daily</b></p>
+        <p>🟢 <b>20% commission on ads purchased by referrals</b></p>
+        <p>🟢 <b>Claim hourly bonuses</b></p>
+        <p>🟢 <b>$1 minimum withdrawal</b></p>
+        <p>🟢 <b>Receive withdrawals within 24 hours</b></p>
+      </div>
+      <div class="popup-buttons">
+        <button class="popup-btn continue-btn" onclick="proceed()">
+          Continue
+        </button>
+        <button class="popup-btn cancel-btn" onclick="closePopup()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Main App -->
+  <div class="app-container" style="display: none">
+    <!-- Fixed Header -->
+    <header class="header">
+      <div class="user-info">
+        <img src="/img/logo.JPG" alt="User Profile" class="profile-pic" id="profile-pic" />
+        <span class="username" id="username">User Name</span>
+      </div>
+      <a href="https://t.me/assured_consultant" target="_blank" class="support-icon">
+        <i class="fas fa-headset"></i>
+        <span>Support</span>
+      </a>
+    </header>
+
+    <!-- Main Content (Pages) -->
+    <div class="pages">
+      <!-- Home Page -->
+      <div class="page home-page active">
+        <div class="fixed-top-section">
+          <div class="balance-section">
+            <h2>
+              Balance
+              <span id="acct-type" style="opacity: 0.5; font-size: 10px"></span>
+            </h2>
+            <div class="balance-card" id="main-balance">
+              <i class="fas fa-wallet"></i>
+              <div>
+                <p>Main Balance</p>
+                <h3>Loading...</h3>
+              </div>
+            </div>
+
+
+
+
+
+            <div class="balance-card" id="bonus-balance" style="display: none;">
+              <i class="fas fa-gift"></i>
+              <div>
+                <p>Bonus Balance</p>
+                <h3>Loading...</h3>
+              </div>
+            </div>
+          </div>
+
+          <button class="create-ads-btn" onclick="createAd()">
+            <i class="fas fa-bullhorn"></i> Create Ads
+          </button>
+
+          <button class="bonus-btn" onclick="claimBonus()">
+            <i class="fas fa-gift"></i> Claim Bonus (1h)
+          </button>
+
+          <button class="advertiser-btn" onclick="showPopup()">
+            <i class="fas fa-hand-holding-dollar"></i> Upgrade to Premium
+          </button>
+        </div>
+
+        <!-- Combined Tasks and Upgrades Section -->
+        <div class="tasks-upgrades-section">
+          <div class="toggle-buttons">
+            <button class="toggle-btn active" data-section="upgrades">
+              Recent Upgrades
+            </button>
+            <button class="toggle-btn" data-section="tasks">Tasks</button>
+          </div>
+
+          <!-- Upgrades Section (Visible by Default) -->
+          <div class="upgraded-members-section active">
+            <div class="upgraded-list-wrapper">
+              <ul class="upgraded-list" id="upgraded-list">
+                <!-- Upgrades will be appended here -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Tasks Section (Hidden by Default) -->
+          <div class="tasks-section">
+            <div class="task-list-wrapper">
+              <ul class="task-list" id="task-list">
+                <!-- Tasks will be appended here -->
+                <p id="no-task"></p>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visitor Stats Section -->
+        <div class="visitor-stats-section">
+          <h2>Visitor Stats</h2>
+          <div id="visitor-stats">
+            <script type="text/javascript" id="mapmyvisitors"
+              src="//mapmyvisitors.com/map.js?d=i6n49ZqXJKNMGDJYGEn3Kl6VukJJTVzAtvwQeVbjJa0&cl=ffffff&w=a"></script>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deposit Page -->
+      <div class="page deposit-page">
+        <h2>Deposit</h2>
+        <div class="deposit-section">
+          <img src="/img/logo.JPG" alt="Deposit QR Code" class="qr-code" />
+          <p>
+            <sTRON TRC20g>Deposit Address:</sTRON TRC20g>
+          </p>
+          <p class="address"></p>
+          <button class="copy-btn copy-address">
+            <i class="fas fa-copy"></i> Copy Address
+          </button>
+          <p class="deposit-info">
+            Send TRX to the address above. Ensure you are on the TRON TRC20 network.
+          </p>
+        </div>
+
+        <!-- Deposit History Section -->
+        <div class="deposit-history-section">
+          <h2>Deposit History (Last 3)</h2>
+          <ul class="history-list" id="deposit-history">
+            <!-- Deposit history will be appended here -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Refer Page -->
+      <div class="page refer-page">
+        <h2>Refer & Earn</h2>
+        <br />
+        <p>
+          Referral Rewards<br />
+          Per paid referral : <span id="rpp">0</span> TRX (TRON TRC20)<br />
+          Created Ads by per paid referral: 2 TRX (TRON TRC20)
+          <br />
+          <br />
+        </p>
+        <div class="refer-section">
+          <div class="refer-stats">
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <div>
+                <p>Total Referrals</p>
+                <h3 id="total-referrals" class="clickable">0</h3>
+                <span class="reveal-text">Click to reveal</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <div>
+                <p>Total Paid Referrals</p>
+                <h3 id="paid-referrals" class="clickable">0</h3>
+                <span class="reveal-text">Click to reveal</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <div>
+                <p>Total Unpaid Referrals</p>
+                <h3 id="unpaid-referrals" class="clickable">0</h3>
+                <span class="reveal-text">Click to reveal</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-coins"></i>
+              <div>
+                <p>Total Expected Profit From Unpaid Referrals</p>
+                <h3 id="expected-profit">0 TRX</h3>
+              </div>
+            </div>
+            <div class="stat-card">
+              <i class="fas fa-coins"></i>
+              <div>
+                <p>Total Profit Received</p>
+                <h3 id="total-profit">0 TRX</h3>
+              </div>
+            </div>
+          </div>
+
+          <!-- Referral Link Section -->
+          <div class="refer-link-section">
+            <p>
+              <sTRON TRC20g>Your Referral Link:</sTRON TRC20g>
+            </p>
+            <p class="refer-link" id="refer-link"></p>
+            <button class="copy-refer-btn">
+              <i class="fas fa-copy"></i> Copy Link
+            </button>
+          </div>
+
+          <!-- Total Referrals List (Hidden by Default) -->
+          <div class="referrals-list" id="total-referrals-list" style="display: none">
+            <h3>All Referrals</h3>
+            <ul class="friends-list" id="total-friends-list">
+              <!-- Total referrals will be appended here -->
+            </ul>
+          </div>
+
+          <!-- Paid Referrals List (Hidden by Default) -->
+          <div class="referrals-list" id="paid-referrals-list" style="display: none">
+            <h3>Paid Referrals</h3>
+            <ul class="friends-list" id="paid-friends-list">
+              <!-- Paid referrals will be appended here -->
+            </ul>
+          </div>
+
+          <!--paid here-->
+
+          <!-- Unpaid Referrals List (Hidden by Default) -->
+          <div class="referrals-list" id="unpaid-referrals-list" style="display: none">
+            <h3>Unpaid Referrals</h3>
+            <ul class="friends-list" id="unpaid-friends-list">
+              <!-- Unpaid referrals will be appended here -->
+            </ul>
+          </div>
+          <!--unpaid here-->
+        </div>
+      </div>
+
+      <!-- Withdraw Page -->
+      <div class="page withdraw-page">
+        <h2>Withdraw</h2>
+        <div class="withdraw-section">
+          <div class="balance-card" id="withdraw-balance">
+            <i class="fas fa-wallet"></i>
+            <div>
+              <p>Available Balance</p>
+              <h3>Loading...</h3>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="withdraw-address">Withdrawal Address</label>
+            <input type="text" id="withdraw-address" placeholder="Enter TRX Address" />
+          </div>
+          <div class="input-group">
+            <label for="withdraw-amount">Amount</label>
+            <input type="number" id="withdraw-amount" placeholder="Enter Amount (TRX)" />
+          </div>
+          <button class="withdraw-btn">
+            <i class="fas fa-paper-plane"></i> Withdraw
+          </button>
+        </div>
+
+        <!-- Withdrawal History Section -->
+        <div class="withdrawal-history-section">
+          <h2>Withdrawal History (Last 3)</h2>
+          <ul class="history-list" id="withdrawal-history">
+            <!-- Withdrawal history will be appended here -->
+          </ul>
+        </div>
+
+        <!-- Recent Withdrawals Section -->
+        <div class="withdrawals-section">
+          <h2>Recent Withdrawals</h2>
+          <div class="withdrawals-list-wrapper">
+            <ul class="withdrawals-list" id="withdrawals-list">
+              <!-- Withdrawals will be appended here -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Others Page -->
+      <div class="page others-page">
+        <h2>Information</h2>
+        <br />
+        <div class="info-section">
+          <p>
+            <sTRON TRC20g>ADSTradeX Ad Network</sTRON TRC20g>
+          </p>
+          <p>
+            The cheapest way to promote on Telegram. Reach thousands with
+            effective promotion strategies.
+          </p>
+
+          <p>
+            Terms of Use, Privacy Policy & Disclaimer <br /><br />
+            TERMS OF USE By using our bot you have confirmed that you will
+            place your ads using our bot, you will be charged according to the
+            bot and the bot will deliver your ads as it is designed. The below
+            shows be avoided
+            <br /><br />
+            ❌ We do not promote pornography, nudity or other related contents
+            <br />
+            ❌ We do not promote scam content
+            <br />
+            ❌ We do not promote hard drugs such as Weed, Marijuana and other
+            related content
+            <br />
+            ❌ Infringing Copyright, Trademarks and related should be avoided
+            <br />
+            ❌ Please do not go again Telegrams Terms and conditions
+            <br /><br />
+            WARNING ⚠️ If any of the above is not followed accordingly your
+            ads will be deleted and your account will be banned.
+
+            <br /><br />
+            PRIVACY POLICY
+            <br />
+            Your data is safe with us. And we have secured facilities helping
+            with the protection of your personal data with us
+            <br />
+            Your data is being used to improve our services and are shared to
+            third parties for the purpose of running ads.
+            <br />
+            If you feel that your data is not safe with us kindly delete our
+            bot from your telegram app. DISCLAIMER
+            <br /><br />
+            We offer only real human beings traffic Worldwide.
+            <br />
+            As our users refer others our bot and channel audience will
+            continue to grow.
+            <br />
+            We do not assure you that our audience will be your client. We
+            only Assure you that we will always deliver your ads to real human
+            beings who at the end will become your clients based on the
+            interest of your advert.
+            <br />
+            We do not own adverts placed in our bot or channel, we will do our
+            best to keep our bot safe for all users.
+            <br />
+            We don't own the contents that will be placed in our bot or
+            channel. All content will be from paid advertisers who want to
+            make their business grow.
+            <br />
+            If you feel that a content infringes your right, kindly contact
+            admin immediately for the removal of that content alongside your
+            legal rights please contact support.
+          </p>
+          <p>
+            Contact support for more details:
+            <a href="https://t.me/assured_consultant" target="_blank">Support</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed Navigation Bar -->
+    <nav class="nav-bar">
+      <div class="nav-item active" data-page="home-page">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </div>
+      <div class="nav-item" data-page="deposit-page">
+        <i class="fas fa-arrow-down"></i>
+        <span>Deposit</span>
+      </div>
+      <div class="nav-item" data-page="refer-page">
+        <i class="fas fa-users"></i>
+        <span>Refer</span>
+      </div>
+      <div class="nav-item" data-page="withdraw-page">
+        <i class="fas fa-arrow-up"></i>
+        <span>Withdraw</span>
+      </div>
+      <div class="nav-item" data-page="others-page">
+        <i class="fas fa-info-circle"></i>
+        <span>Others</span>
+      </div>
+    </nav>
+  </div>
+
+
+  <!-- Ads Button -->
+  <button id="adBtn">
+    <i class="fas fa-play"></i> Watch Ad
+  </button>
+
+  <script>
+    // Function to generate random ID (e.g., 07******57)
+    function generateRandomId() {
+      const prefix = Math.floor(Math.random() * 10)
+        .toString()
+        .padStart(2, "0");
+      const suffix = Math.floor(Math.random() * 100)
+        .toString()
+        .padStart(2, "0");
+      return `${prefix}******${suffix}`;
+    }
+
+    // Function to generate random amount between 50 and 500 TRX
+    function generateRandomAmount() {
+      const amount = Math.random() * (500 - 50) + 50;
+      return amount.toFixed(2) + " TRX";
+    }
+
+    // Function to append a new upgrade entry
+    function appendUpgrade() {
+      const upgradedList = document.getElementById("upgraded-list");
+      const newUpgrade = document.createElement("li");
+      newUpgrade.classList.add("upgraded-item");
+      newUpgrade.innerHTML = `
+          <div class="upgraded-details">
+            <i class="fas fa-user"></i>
+            <div>
+              <p>Congratulations: ${generateRandomId()}</p>
+              <span>Upgraded to Premium</span>
+            </div>
+          </div>
+          <span class="upgraded-amount">${Number(window.upgrade_price)} TRX</span>
+        `;
+      upgradedList.appendChild(newUpgrade);
+      upgradedList.scrollTop = upgradedList.scrollHeight;
+    }
+
+    // Function to append a new withdrawal entry
+    function appendWithdrawal() {
+      const withdrawalsList = document.getElementById("withdrawals-list");
+      const newWithdrawal = document.createElement("li");
+      newWithdrawal.classList.add("withdrawal-item");
+      newWithdrawal.innerHTML = `
+          <div class="withdrawal-details">
+            <i class="fas fa-user"></i>
+            <div>
+              <p>Congratulations: ${generateRandomId()}</p>
+              <span>Withdrew Funds</span>
+            </div>
+          </div>
+          <span class="withdrawal-amount">${generateRandomAmount()}</span>
+        `;
+      withdrawalsList.appendChild(newWithdrawal);
+      withdrawalsList.scrollTop = withdrawalsList.scrollHeight;
+    }
+
+    // Function to append withdrawal history (last 3) using real data
+    function appendWithdrawalHistory(withdrawHistory) {
+      const withdrawalHistoryList =
+        document.getElementById("withdrawal-history");
+      withdrawalHistoryList.innerHTML = ""; // Clear existing entries
+      const lastThreeWithdrawals = withdrawHistory.slice(-3).reverse(); // Get last 3 entries, reverse to show newest first
+      if (lastThreeWithdrawals.length === 0) {
+        const noDataItem = document.createElement("li");
+        noDataItem.classList.add("history-item");
+        noDataItem.innerHTML = `<p>No withdrawal history available.</p>`;
+        withdrawalHistoryList.appendChild(noDataItem);
+        return;
+      }
+      lastThreeWithdrawals.forEach((entry) => {
+        const historyItem = document.createElement("li");
+        historyItem.classList.add("history-item");
+        historyItem.innerHTML = `
+            <div class="history-details">
+              <p>Date: ${new Date(entry.date).toLocaleString()}</p>
+              <p>Amount: ${entry.amount} TRX</p>
+              <p>Type: ${entry.status}</p>
+            </div>
+          `;
+        withdrawalHistoryList.appendChild(historyItem);
+      });
+    }
+
+    // Function to append deposit history (last 3) using real data
+    function appendDepositHistory(depositHistory) {
+      const depositHistoryList = document.getElementById("deposit-history");
+      depositHistoryList.innerHTML = ""; // Clear existing entries
+      const lastThreeDeposits = depositHistory.slice(-3).reverse(); // Get last 3 entries, reverse to show newest first
+      if (lastThreeDeposits.length === 0) {
+        const noDataItem = document.createElement("li");
+        noDataItem.classList.add("history-item");
+        noDataItem.innerHTML = `<p>No deposit history available.</p>`;
+        depositHistoryList.appendChild(noDataItem);
+        return;
+      }
+      lastThreeDeposits.forEach((entry) => {
+        const historyItem = document.createElement("li");
+        historyItem.classList.add("history-item");
+        historyItem.innerHTML = `
+            <div class="history-details">
+              <p>Date: ${new Date(entry.date).toLocaleString()}</p>
+              <p>Amount: ${entry.amount} TRX</p>
+              <p>Status: ${entry.status}</p>
+            </div>
+          `;
+        depositHistoryList.appendChild(historyItem);
+      });
+    }
+
+    // Populate referral stats and lists
+    function populateReferralStats(totalReferralsData) {
+      console.log(totalReferralsData);
+      const unpaidReferralsData = totalReferralsData.filter(
+        (ref) => ref.status === "unpaid"
+      );
+      const paidReferralsData = totalReferralsData.filter(
+        (ref) => ref.status === "paid"
+      );
+
+      document.getElementById("total-referrals").textContent =
+        totalReferralsData.length;
+      document.getElementById("paid-referrals").textContent =
+        paidReferralsData.length;
+      document.getElementById("unpaid-referrals").textContent =
+        unpaidReferralsData.length;
+      document.getElementById("expected-profit").textContent = `${unpaidReferralsData.length * window.refP
+        } TRX`;
+      document.getElementById("total-profit").textContent = `${paidReferralsData.length * window.refP
+        } TRX`;
+      document.getElementById("rpp").textContent = window.refP;
+
+      // Populate total referrals list
+      const totalList = document.getElementById("total-friends-list");
+      totalReferralsData.forEach((referral, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("friend-item");
+        listItem.style.animationDelay = `${index * 0.1}s`;
+        listItem.innerHTML = `
+            <i class="fas fa-user"></i>
+            <div class="friend-details">
+              <p>${referral.name}</p>
+              <span>Status: ${referral.status === "paid"
+            ? "Reward: +" + referral.reward + " TRX"
+            : "Pending Reward: +" + referral.reward + " TRX"
+          }</span>
+            </div>
+          `;
+        totalList.appendChild(listItem);
+      });
+
+      // Populate unpaid referrals list
+      const unpaidList = document.getElementById("unpaid-friends-list");
+      unpaidReferralsData.forEach((referral, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("friend-item");
+        listItem.style.animationDelay = `${index * 0.1}s`;
+        listItem.innerHTML = `
+            <i class="fas fa-user"></i>
+            <div class="friend-details">
+              <p>${referral.name}</p>
+              <span>Pending Reward: +${referral.reward} TRX</span>
+            </div>
+          `;
+        unpaidList.appendChild(listItem);
+      });
+
+      // Populate paid referrals list
+      const paidList = document.getElementById("paid-friends-list");
+      paidReferralsData.forEach((referral, index) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("friend-item");
+        listItem.style.animationDelay = `${index * 0.1}s`;
+        listItem.innerHTML = `
+            <i class="fas fa-user"></i>
+            <div class="friend-details">
+              <p>${referral.name}</p>
+              <span>Reward: +${referral.reward} TRX</span>
+            </div>
+          `;
+        paidList.appendChild(listItem);
+      });
+    }
+
+    // Function to hide all referral lists
+    function hideAllReferralLists() {
+      document.getElementById("total-referrals-list").style.display = "none";
+      document.getElementById("paid-referrals-list").style.display = "none";
+      document.getElementById("unpaid-referrals-list").style.display = "none";
+    }
+
+    // Toggle visibility of total referrals list
+    document
+      .getElementById("total-referrals")
+      .addEventListener("click", () => {
+        const totalList = document.getElementById("total-referrals-list");
+        const isVisible = totalList.style.display === "block";
+        hideAllReferralLists();
+        totalList.style.display = isVisible ? "none" : "block";
+      });
+
+    // Toggle visibility of paid referrals list
+    document
+      .getElementById("paid-referrals")
+      .addEventListener("click", () => {
+        const paidList = document.getElementById("paid-referrals-list");
+        const isVisible = paidList.style.display === "block";
+        hideAllReferralLists();
+        paidList.style.display = isVisible ? "none" : "block";
+      });
+
+    // Toggle visibility of unpaid referrals list
+    document
+      .getElementById("unpaid-referrals")
+      .addEventListener("click", () => {
+        const unpaidList = document.getElementById("unpaid-referrals-list");
+        const isVisible = unpaidList.style.display === "block";
+        hideAllReferralLists();
+        unpaidList.style.display = isVisible ? "none" : "block";
+      });
+
+    // Start appending upgrades, withdrawals, and histories dynamically
+    window.addEventListener("load", () => {
+
+      // Add new entries every 3-7 seconds
+      setInterval(() => {
+        appendUpgrade();
+        appendWithdrawal();
+      }, Math.random() * (7000 - 3000) + 3000);
+    });
+
+    // Toggle between Tasks and Upgrades
+    const toggleButtons = document.querySelectorAll(".toggle-btn");
+    const upgradesSection = document.querySelector(
+      ".upgraded-members-section"
+    );
+    const tasksSection = document.querySelector(".tasks-section");
+
+    toggleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        toggleButtons.forEach((btn) => btn.classList.remove("active"));
+        upgradesSection.classList.remove("active");
+        tasksSection.classList.remove("active");
+
+        button.classList.add("active");
+        const section = button.getAttribute("data-section");
+        if (section === "upgrades") {
+          upgradesSection.classList.add("active");
+        } else if (section === "tasks") {
+          tasksSection.classList.add("active");
+        }
+      });
+    });
+
+    async function createAd() {
+      const res = await axios.post("/create-ad");
+      Telegram.WebApp.close();
+    }
+
+    function showPopup() {
+      const t = document.querySelector(".advertiser-btn");
+      t.innerHTML = `<i class="fas fa-hand-holding-dollar"></i> ${t.textContent} <i class="fas fa-spinner fa-spin" style="color: white; margin-left: 10px;"></i>`;
+      setTimeout(() => {
+        t.innerHTML = `<i class="fas fa-hand-holding-dollar"></i> ${t.textContent}`;
+        document.getElementById("popup").style.display = "flex";
+      }, 2000);
+    }
+
+    function closePopup() {
+      const t = document.querySelector(".continue-btn");
+      t.textContent = `Continue`;
+      document.getElementById("popup").style.display = "none";
+    }
+
+    async function proceed() {
+      const t = document.querySelector(".continue-btn");
+      t.innerHTML = `Continue <i class="fas fa-spinner fa-spin" style="color: white; margin-left: 5px;"></i>`;
+
+      const res = await axios.post("/subs");
+      alert(res.data.message);
+      closePopup();
+
+      if (res.data.suc) {
+        const b = window.mainBalance - window.upgrade_price;
+        window.mainBalance = b;
+
+        document.querySelector("#main-balance h3").textContent = `${b.toFixed(4) || 0
+          } TRX (TRON TRC20)`;
+
+        document.querySelector("#withdraw-balance h3").textContent = `${b.toFixed(4) || 0
+          } TRX (TRON TRC20)`;
+
+        document.querySelector(".advertiser-btn").style.display = "none";
+        document.querySelector("#acct-type").textContent = "premium";
+        return;
+      }
+    }
+
+    async function claimBonus() {
+      try {
+        if (!window.premium) {
+          alert("Bonus available to premium user only");
+          return;
+        }
+        const currentTime = Date.now();
+        const timeElapsed = currentTime - (window.lastBonusTime || 0);
+        const claimInterval = 1 * 60 * 60 * 1000;
+
+        if (timeElapsed >= claimInterval) {
+          alert("Claiming...");
+          const response = await axios.post("/claim");
+          const data = response.data;
+
+          if (data.suc) {
+            window.lastBonusTime = data.ll;
+            const b = window.mainBalance + data.bonus;
+            window.mainBalance = b;
+
+            document.querySelector("#main-balance h3").textContent = `${b.toFixed(4) || 0
+              } TRX (TRON TRC20)`;
+
+            document.querySelector("#withdraw-balance h3").textContent = `${b.toFixed(4) || 0
+              } TRX (TRON TRC20)`;
+
+            alert("You have successfully claimed " + data.bonus + "TRX!");
+          } else {
+            alert(data.error);
+          }
+        } else {
+          const remainingTimeMs = claimInterval - timeElapsed;
+          const minutes = Math.floor(remainingTimeMs / (1000 * 60));
+          const seconds = Math.floor((remainingTimeMs % (1000 * 60)) / 1000);
+          alert(`You can claim again in ${minutes}m ${seconds}s.`);
+        }
+      } catch (error) {
+        console.error("Error during claim:", error);
+        alert("Oops! An error occurred, please try again later.");
+      }
+    }
+
+    document
+      .getElementsByClassName("copy-address")[0]
+      .addEventListener("click", async (e) => {
+        const a = document.getElementsByClassName("address")[0].textContent;
+
+        navigator.clipboard
+          .writeText(a)
+          .then(() => {
+            alert("Address copied successfully!");
+          })
+          .catch((err) => {
+            alert("Failed to copy:", err);
+          });
+      });
+
+    document
+      .getElementsByClassName("withdraw-btn")[0]
+      .addEventListener("click", async (e) => {
+        let cb = window.mainBalance;
+        const walletAddress = document
+          .querySelector("#withdraw-address")
+          .value.trim();
+        if (!walletAddress) {
+          return alert("Please input a valid wallet address!");
+        }
+
+        const amount = document
+          .querySelector("#withdraw-amount")
+          .value.trim();
+
+        if (!amount || isNaN(amount)) {
+          return alert("Please enter a valid amount!");
+        }
+        if (Number(amount) < 5) {
+          return alert("Minimum withdrawal is 5 TRX!");
+        }
+
+        if (Number(amount) > Number(cb || 0)) {
+          return alert("Withdrawal amount exceed balance!");
+        }
+
+        alert("Processing withdrawal...");
+
+        try {
+          const response = await fetch("/withdraw", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              amount,
+              walletAddress,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Withdrawal Error");
+          }
+
+          const data = await response.json();
+
+          if (data.suc != true) {
+            return alert("An error occurred!");
+          }
+
+          cb = cb - amount;
+          window.mainBalance = cb;
+
+          document.querySelector("#main-balance h3").textContent = `${cb.toFixed(4) || 0
+            } TRX (TRON TRC20)`;
+
+          document.querySelector("#withdraw-balance h3").textContent = `${cb.toFixed(4) || 0
+            } TRX (TRON TRC20)`;
+
+          alert(data.message);
+
+          if (data.withdrawHistory) {
+            appendWithdrawalHistory(data.withdrawHistory);
+          }
+        } catch (e) {
+          console.log(e);
+          alert(e);
+        }
+      });
+
+    async function performTask(id) {
+      try {
+        if (!window.premium) {
+          alert("Tasks available to premium user only");
+          return;
+        }
+
+        document.getElementsByClassName(id)[0].innerHTML =
+          '<i class="fas fa-spinner fa-spin" style="color: white; margin: 0 auto;"></i>';
+
+        const response = await fetch("/task/" + id, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to load task");
+        }
+
+        const { url } = await response.json();
+
+        Telegram.WebApp.openLink(url);
+
+        setTimeout(() => {
+          document.getElementsByClassName(id)[0].innerText =
+            "Click to submit";
+          document.getElementsByClassName(id)[0].onclick = async () => {
+            document.getElementsByClassName(id)[0].innerHTML =
+              '<i class="fas fa-spinner fa-spin" style="color: white; margin: 0 auto;"></i>';
+
+            const response = await fetch("/perform-task/" + id, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.error || "Failed to perform task");
+            }
+
+            const data = await response.json();
+
+            document.getElementsByClassName(id)[0].innerHTML =
+              '<i class="fas fa-check" style="color: white; margin: 0 auto;"></i>';
+            document.getElementsByClassName(id)[0].onclick = "";
+
+            const b1 = document.querySelector("#main-balance h3");
+            const b2 = document.querySelector("#withdraw-balance h3");
+
+            const b = window.mainBalance;
+            const bb = window.bonusBalance;
+
+            b1.textContent = `${Number(b) + data.reward || 0} TRX (TRON TRC20)`;
+            b2.textContent = `${Number(b) + data.reward || 0} TRX (TRON TRC20)`;
+          };
+        }, 3000);
+      } catch (error) {
+        console.error("Error fetching perform task:", error);
+        alert(error.message);
+        document.getElementsByClassName(id)[0].innerText = "Start";
+      }
+    }
+
+    window.addEventListener("load", async () => {
+      try {
+        if (!window.Telegram || !window.Telegram.WebApp) {
+          throw new Error("Telegram WebApp is not available");
+        }
+
+        window.Telegram.WebApp.expand();
+
+        const initData = window.Telegram.WebApp.initData;
+        const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe;
+
+        const response = await fetch("/validate-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ data: { initData, initDataUnsafe } }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to validate user");
+        }
+
+        const data = await response.json();
+
+        // Hide loading screen with animation
+        const loadingScreen = document.querySelector(".loading-screen");
+        loadingScreen.style.opacity = "0";
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+          document.querySelector(".app-container").style.display = "block";
+          document.querySelector(".app-container").style.opacity = "1";
+        }, 500);
+
+        document.getElementById("profile-pic").src =
+          data.profilePic || "/img/logo.JPG";
+        document.getElementById("username").textContent =
+          data.username || "King. Star 🔫";
+
+        document.querySelector("#main-balance h3").textContent = `${data.mainBalance.toFixed(4) || 0
+          } TRX (TRON TRC20)`;
+        window.mainBalance = data.mainBalance;
+        window.bonusBalance = data.bonusBalance;
+        window.lastBonusTime = data.lastBonusTime;
+        window.upgrade_price = data.upgrade_price;
+        window.refP = data.refP || 0;
+
+        document.querySelector("#bonus-balance h3").textContent = `${data.bonusBalance.toFixed(4) || 0
+          } TRX (TRON TRC20)`;
+        document.querySelector("#withdraw-balance h3").textContent = `${data.mainBalance.toFixed(4) || 0
+          } TRX (TRON TRC20)`;
+        const taskList = document.getElementById("task-list");
+        const ntt = document.getElementById("no-task");
+        document.getElementById('adBtn').style.display = "flex";
+
+        
+
+
+
+        if (data.premium) {
+          document.querySelector(".advertiser-btn").style.display = "none";
+          document.querySelector("#acct-type").textContent = "premium";
+          window.premium = true;
+        } else {
+          document.querySelector(".advertiser-btn").style.display = "flex";
+          document.querySelector("#acct-type").textContent = "free";
+        }
+
+        document.querySelector(".address").textContent = data.address;
+
+
+
+
+
+        if (data.tasks?.length > 0) {
+          taskList.innerHTML = "";
+        } else {
+          ntt.textContent = "No Task Available!";
+        }
+
+
+
+
+
+
+        data.tasks?.forEach((task, index) => {
+          const taskItem = document.createElement("li");
+          taskItem.classList.add("task-item");
+          taskItem.style.animationDelay = `${index * 0.1}s`;
+          taskItem.innerHTML = `
+                        <i class="${task.icon}"></i>
+                        <div class="task-details">
+                            <p>${task.description}</p>
+                            <span>+${task.reward}TRX</span>
+                        </div>
+
+                        <button 
+                            class="start-btn ${task.id}"
+                            ${task.type != "completed"
+              ? `onclick='performTask(${task.id})'`
+              : ""
+            }>
+                            ${task.type == "completed"
+              ? '<i class="fas fa-check" style="color: white; margin: 0 auto;"></i>'
+              : "Start"
+            }
+                        </button>
+                    `;
+          taskList.appendChild(taskItem);
+        });
+
+        // Add copy functionality to the referral link button
+        const copyReferBtn = document.querySelector(".copy-refer-btn");
+        copyReferBtn.addEventListener("click", () => {
+          const referLink = document.getElementById("refer-link").textContent;
+          navigator.clipboard
+            .writeText(referLink)
+            .then(() => {
+              copyReferBtn.textContent = "Copied!";
+              copyReferBtn.classList.add("copied");
+              setTimeout(() => {
+                copyReferBtn.innerHTML =
+                  '<i class="fas fa-copy"></i> Copy Link';
+                copyReferBtn.classList.remove("copied");
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("Failed to copy:", err);
+              alert("Failed to copy the link. Please copy it manually.");
+            });
+        });
+
+        // Populate referral data
+        document.getElementById("refer-link").textContent = data.refLink;
+
+        // Append withdrawal and deposit history using real data
+        appendWithdrawalHistory(data.withdrawHistory || []);
+        appendDepositHistory(data.depositHistory || []);
+        populateReferralStats(data.downlines);
+
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        alert("Failed to load user data: " + error.message);
+      }
+    });
+
+    // Toggle Pages with Animation
+    const navItems = document.querySelectorAll(".nav-item");
+    const pages = document.querySelectorAll(".page");
+
+    navItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        navItems.forEach((nav) => nav.classList.remove("active"));
+        pages.forEach((page) => {
+          page.classList.remove("active");
+          page.classList.remove("slide-in");
+        });
+
+        item.classList.add("active");
+        const pageClass = item.getAttribute("data-page");
+        const targetPage = document.querySelector(`.${pageClass}`);
+        targetPage.classList.add("active");
+        targetPage.classList.add("slide-in");
+      });
+    });
+  </script>
+
+
+
+  <!-- Ads code in this script -->
+  <script>
+    const AdController = window.Adsgram.init({ blockId: "3753" });
+    const adBtn = document.getElementById('adBtn');
+
+    adBtn.addEventListener('click', () => {
+      //alert("Yes")
+      AdController.show().then((result) => {
+        if (result && result.done && !result.error) {
+
+          if (window.Telegram && Telegram.WebApp.HapticFeedback) {
+            Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+          };
+          window.location.href = '/home';
+        } else {
+          alert('Ad not fully viewed.');
+        }
+      }).catch((error) => {
+        console.error('Ad Error:', error);
+      });
+    });
+  </script>
+
+</body>
+
+</html>
